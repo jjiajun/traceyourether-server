@@ -35,6 +35,7 @@ class UserController extends BaseController {
   async logIn(req, res) {
     console.log("logging in");
     const { email, password } = req.body;
+    console.log('email',email)
     const user = await this.model.findOne({ email });
     try {
       if (!user) {
