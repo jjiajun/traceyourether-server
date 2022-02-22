@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 const { SALT } = process.env;
+const cors = require("cors");
 
 /** Create connection to mongodb */
 mongoose.connect("mongodb://127.0.0.1:27017/cryptopay", () => {
@@ -30,6 +31,12 @@ const groupControl = new GroupController(Group, SALT);
 
 /** Initialize express instance */
 const app = express();
+// use cors
+app.use(
+  cors({
+    origin: true,
+  })
+);
 
 /** Middlewares */
 app.use(express.urlencoded({ extended: false })); // handles req.body from form requests
