@@ -21,11 +21,11 @@ class UserController extends BaseController {
    */
   async getUserProfileById(req, res) {
     const { id } = req.body;
-    const allUserData = await this.model.findOne({ _id: id });
-    if (!allUserData) {
+    const userProfile = await this.model.findOne({ _id: id });
+    if (!userProfile) {
       res.send("No data");
     }
-    res.send({ allUserData });
+    res.send({ userProfile });
   }
 
   /** Returns a token and the userId to the FE if log in is successful
@@ -88,7 +88,7 @@ class UserController extends BaseController {
         const token = jwt.sign(payload, this.salt, {
           expiresIn: "6h",
         });
-        res.send({ token, userId: user._id });
+        res.send({ token, userId: newUser._id });
       }
     } catch (err) {
       this.errorHandler(err, res);

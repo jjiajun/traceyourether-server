@@ -13,7 +13,8 @@ const userSchema = new Schema(
     },
     password: { type: String },
     address: { type: String, required: true },
-    walletBalance: Number,
+    // walletBalance: Number,
+    // requests: []
     friends: [
       {
         type: Schema.Types.ObjectId,
