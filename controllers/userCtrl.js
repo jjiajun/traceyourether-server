@@ -9,6 +9,7 @@ class UserController extends BaseController {
 
   /** For testing purposes, but decided to leave it here in case we need such a route */
   async getAllUsersData(req, res) {
+    console.log('find all')
     const allUserData = await this.model.find();
     if (!allUserData) {
       res.send("No data");
@@ -17,10 +18,11 @@ class UserController extends BaseController {
   }
 
   /** get user profile data by id
-   * @param {number} id
+   * @param {string} id
    */
   async getUserProfileById(req, res) {
     const { id } = req.body;
+    console.log(id)
     const userProfile = await this.model.findOne({ _id: id });
     if (!userProfile) {
       res.send("No data");
@@ -51,7 +53,7 @@ class UserController extends BaseController {
           };
           const token = jwt.sign(payload, this.salt, { expiresIn: "6h" });
           console.log(user);
-          res.send({ token, userId: user._id });
+          res.send({ token, userId: user._id ,success:true});
         } else {
           res.send("The email or password is incorrect");
         }

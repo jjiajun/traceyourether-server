@@ -6,7 +6,7 @@ module.exports = (controller) => {
     "/getallusersdata",
     controller.getAllUsersData.bind(controller)
   );
-  userRouter.get(
+  userRouter.post(
     "/getuserprofilebyid",
     controller.getUserProfileById.bind(controller)
   );
