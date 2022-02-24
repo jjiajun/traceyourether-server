@@ -11,8 +11,8 @@ const userSchema = new Schema(
       trim: true,
       match: /.+\@.+\..+/,
     },
-    password: { type: String },
-    address: { type: String, required: true },
+    password: { type: String,required: true },
+    address: { type: String,  },
     // walletBalance: Number,
     // requests: []
     friends: [
