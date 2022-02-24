@@ -21,13 +21,42 @@ class UserController extends BaseController {
    * @param {string} id
    */
   async getUserProfileById(req, res) {
-    const { id } = req.body;
-    console.log(id)
-    const userProfile = await this.model.findOne({ _id: id });
-    if (!userProfile) {
-      res.send("No data");
+    try{
+      const { id } = req.body;
+      console.log(id)
+      const userProfile = await this.model.findOne({ _id: id });
+      
+      if (!userProfile) {
+        res.send("No data");
+      }
+      
+      res.send({ userProfile });
+
+    }catch (err) {
+      this.errorHandler(err, res);
     }
-    res.send({ userProfile });
+  }
+
+  /** get user profile data by email
+   * @param {string} email
+   */
+  async addFriendByEmail(req, res) {
+    try{
+
+      const { email,id } = req.body;
+      const friendProfile = await this.model.findOne({ email: email });
+      if (!friendProfile) {
+        return res.send("No data");
+      }
+      console.log(friendProfile)
+      const friendId = friendProfile._id
+      console.log(friendId)
+      const added = await this.model.updateOne({_id:id},{$push:{friends: friendId}})
+
+      res.send({ friendProfile });
+    }catch (err) {
+      this.errorHandler(err, res);
+    }
   }
 
   /** Returns a token and the userId to the FE if log in is successful
