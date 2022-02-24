@@ -24,7 +24,7 @@ class UserController extends BaseController {
     try{
       const { id } = req.body;
       console.log(id)
-      const userProfile = await this.model.findOne({ _id: id });
+      const userProfile = await this.model.findOne({ _id: id }).populate('friends');
       
       if (!userProfile) {
         res.send("No data");
