@@ -100,13 +100,14 @@ class UserController extends BaseController {
    */
   async signUp(req, res) {
     console.log("signing up");
-    const { name, email, password } = req.body;
+    const { name, email, password,address } = req.body;
     try {
       const hash = await bcrypt.hash(password, 10);
       const newUser = await this.model.create({
         name,
         email,
         password: hash,
+        address:address,
       });
       if (!newUser) {
         res.send("Something went wrong when creating a new user");

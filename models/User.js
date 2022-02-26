@@ -12,13 +12,14 @@ const userSchema = new Schema(
       match: /.+\@.+\..+/,
     },
     password: { type: String,required: true },
-    address: { type: String,  },
+    address: { type: String,required: true  },
     // walletBalance: Number,
     // requests: []
     friends: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
+        unique: true,
       },
     ],
     groups: [
