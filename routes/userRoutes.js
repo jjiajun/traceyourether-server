@@ -10,6 +10,10 @@ module.exports = (controller) => {
     "/getuserprofilebyid",
     controller.getUserProfileById.bind(controller)
   );
+  userRouter.post(
+    "/getuserprofilebywallet",
+    controller.getUserProfileByWallet.bind(controller)
+  );
   userRouter.post('/addfriendbyemail',controller.addFriendByEmail.bind(controller));
   // userRouter.post("/postdata", controller.postData.bind(controller));
   userRouter.post("/login", controller.logIn.bind(controller));

@@ -27,7 +27,28 @@ class UserController extends BaseController {
       const userProfile = await this.model.findOne({ _id: id }).populate('friends');
       
       if (!userProfile) {
-        res.send("No data");
+        return res.send("No data");
+      }
+      
+      res.send({ userProfile });
+
+    }catch (err) {
+      this.errorHandler(err, res);
+    }
+  }
+
+  /** get user profile data by address
+   * @param {string} address
+   */
+  async getUserProfileByWallet(req, res) {
+    try{
+      let { address } = req.body;
+      address = address.toLowerCase()
+      console.log('here', typeof address, address)
+      const userProfile = await this.model.findOne({ address: address });
+      
+      if (!userProfile) {
+       return res.send("No data");
       }
       
       res.send({ userProfile });

@@ -12,7 +12,7 @@ const userSchema = new Schema(
       match: /.+\@.+\..+/,
     },
     password: { type: String,required: true },
-    address: { type: String,required: true  },
+    address: { type: String,required: true ,unique: true },
     // walletBalance: Number,
     // requests: []
     friends: [
