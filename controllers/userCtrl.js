@@ -9,6 +9,7 @@ class UserController extends BaseController {
 
   /** For testing purposes, but decided to leave it here in case we need such a route */
   async getAllUsersData(req, res) {
+    console.log('find all')
     const allUserData = await this.model.find();
     if (!allUserData) {
       res.send("No data");
@@ -17,15 +18,66 @@ class UserController extends BaseController {
   }
 
   /** get user profile data by id
-   * @param {number} id
+   * @param {string} id
    */
   async getUserProfileById(req, res) {
-    const { id } = req.body;
-    const userProfile = await this.model.findOne({ _id: id });
-    if (!userProfile) {
-      res.send("No data");
+    try{
+      const { id } = req.body;
+      console.log(id)
+      const userProfile = await this.model.findOne({ _id: id }).populate('friends');
+      
+      if (!userProfile) {
+        return res.send("No data");
+      }
+      
+      res.send({ userProfile });
+
+    }catch (err) {
+      this.errorHandler(err, res);
     }
-    res.send({ userProfile });
+  }
+
+  /** get user profile data by address
+   * @param {string} address
+   */
+  async getUserProfileByWallet(req, res) {
+    try{
+      let { address } = req.body;
+      address = address.toLowerCase()
+      console.log('here', typeof address, address)
+      const userProfile = await this.model.findOne({ address: address });
+      
+      if (!userProfile) {
+       return res.send("No data");
+      }
+      
+      res.send({ userProfile });
+
+    }catch (err) {
+      this.errorHandler(err, res);
+    }
+  }
+
+  /** get user profile data by email
+   * @param {string} email
+   */
+  async addFriendByEmail(req, res) {
+    try{
+
+      const { email,id } = req.body;
+      const friendProfile = await this.model.findOne({ email: email });
+      if (!friendProfile) {
+        return res.send("No data");
+      }
+      console.log(friendProfile)
+      const friendId = friendProfile._id
+      console.log(friendId)
+      const added = await this.model.updateOne({_id:id},{$push:{friends: friendId}})
+
+      res.send({ friendProfile });
+    }catch (err) {
+      this.errorHandler(err, res);
+    }
   }
 
   /** Returns a token and the userId to the FE if log in is successful
@@ -35,6 +87,7 @@ class UserController extends BaseController {
   async logIn(req, res) {
     console.log("logging in");
     const { email, password } = req.body;
+    console.log('email',email)
     const user = await this.model.findOne({ email });
     try {
       if (!user) {
@@ -50,7 +103,7 @@ class UserController extends BaseController {
           };
           const token = jwt.sign(payload, this.salt, { expiresIn: "6h" });
           console.log(user);
-          res.send({ token, userId: user._id });
+          res.send({ token, userId: user._id ,success:true});
         } else {
           res.send("The email or password is incorrect");
         }
@@ -68,14 +121,14 @@ class UserController extends BaseController {
    */
   async signUp(req, res) {
     console.log("signing up");
-    const { name, email, password, address } = req.body;
+    const { name, email, password,address } = req.body;
     try {
       const hash = await bcrypt.hash(password, 10);
       const newUser = await this.model.create({
         name,
         email,
         password: hash,
-        address,
+        address:address,
       });
       if (!newUser) {
         res.send("Something went wrong when creating a new user");
@@ -83,7 +136,6 @@ class UserController extends BaseController {
         const payload = {
           _id: newUser._id,
           name: newUser.name,
-          address: newUser.address,
         };
         const token = jwt.sign(payload, this.salt, {
           expiresIn: "6h",

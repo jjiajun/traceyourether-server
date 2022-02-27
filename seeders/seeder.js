@@ -33,7 +33,7 @@ const userSeeds = [
 runSeeder = async () => {
   console.log("test");
   // delete all existing records in the DB
-  await User.deleteMany({});
+  //await User.deleteMany({});
   // inserts seed data
   const users = await User.insertMany(userSeeds);
   console.log("Inserted userSeeds. This is the result: ", users);

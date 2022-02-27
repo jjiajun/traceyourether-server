@@ -31,12 +31,7 @@ const groupControl = new GroupController(Group, SALT);
 
 /** Initialize express instance */
 const app = express();
-// use cors
-app.use(
-  cors({
-    origin: true,
-  })
-);
+app.use(cors({ origin: true }));
 
 /** Middlewares */
 app.use(express.urlencoded({ extended: false })); // handles req.body from form requests
