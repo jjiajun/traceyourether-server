@@ -124,6 +124,7 @@ class UserController extends BaseController {
     const { name, email, password,address } = req.body;
     try {
       const hash = await bcrypt.hash(password, 10);
+      console.log('do the do',name, email, password,address )
       const newUser = await this.model.create({
         name,
         email,
@@ -131,8 +132,10 @@ class UserController extends BaseController {
         address:address,
       });
       if (!newUser) {
+        console.log('not new user')
         res.send("Something went wrong when creating a new user");
       } else {
+        console.log('done the do')
         const payload = {
           _id: newUser._id,
           name: newUser.name,
