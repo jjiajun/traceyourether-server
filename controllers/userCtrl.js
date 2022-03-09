@@ -9,7 +9,7 @@ class UserController extends BaseController {
 
   /** For testing purposes, but decided to leave it here in case we need such a route */
   async getAllUsersData(req, res) {
-    console.log('find all')
+    console.log("find all");
     const allUserData = await this.model.find();
     if (!allUserData) {
       res.send("No data");
@@ -21,18 +21,19 @@ class UserController extends BaseController {
    * @param {string} id
    */
   async getUserProfileById(req, res) {
-    try{
+    try {
       const { id } = req.body;
-      console.log(id)
-      const userProfile = await this.model.findOne({ _id: id }).populate('friends');
-      
+      console.log("ID: ", id);
+      const userProfile = await this.model
+        .findOne({ _id: id })
+        .populate("friends");
+
       if (!userProfile) {
         return res.send("No data");
       }
-      
-      res.send({ userProfile });
 
-    }catch (err) {
+      res.send({ userProfile });
+    } catch (err) {
       this.errorHandler(err, res);
     }
   }
@@ -41,19 +42,17 @@ class UserController extends BaseController {
    * @param {string} address
    */
   async getUserProfileByWallet(req, res) {
-    try{
+    try {
       let { address } = req.body;
-      address = address.toLowerCase()
-      console.log('here', typeof address, address)
+      address = address.toLowerCase();
       const userProfile = await this.model.findOne({ address: address });
-      
-      if (!userProfile) {
-       return res.send("No data");
-      }
-      
-      res.send({ userProfile });
 
-    }catch (err) {
+      if (!userProfile) {
+        return res.send("No data");
+      }
+
+      res.send({ userProfile });
+    } catch (err) {
       this.errorHandler(err, res);
     }
   }
@@ -62,20 +61,22 @@ class UserController extends BaseController {
    * @param {string} email
    */
   async addFriendByEmail(req, res) {
-    try{
-
-      const { email,id } = req.body;
+    try {
+      const { email, id } = req.body;
       const friendProfile = await this.model.findOne({ email: email });
       if (!friendProfile) {
         return res.send("No data");
       }
-      console.log(friendProfile)
-      const friendId = friendProfile._id
-      console.log(friendId)
-      const added = await this.model.updateOne({_id:id},{$push:{friends: friendId}})
+      console.log(friendProfile);
+      const friendId = friendProfile._id;
+      console.log(friendId);
+      const added = await this.model.updateOne(
+        { _id: id },
+        { $push: { friends: friendId } }
+      );
 
       res.send({ friendProfile });
-    }catch (err) {
+    } catch (err) {
       this.errorHandler(err, res);
     }
   }
@@ -87,7 +88,7 @@ class UserController extends BaseController {
   async logIn(req, res) {
     console.log("logging in");
     const { email, password } = req.body;
-    console.log('email',email)
+    console.log("email", email);
     const user = await this.model.findOne({ email });
     try {
       if (!user) {
@@ -103,7 +104,7 @@ class UserController extends BaseController {
           };
           const token = jwt.sign(payload, this.salt, { expiresIn: "6h" });
           console.log(user);
-          res.send({ token, userId: user._id ,success:true});
+          res.send({ token, userId: user._id, success: true });
         } else {
           res.send("The email or password is incorrect");
         }
@@ -121,21 +122,20 @@ class UserController extends BaseController {
    */
   async signUp(req, res) {
     console.log("signing up");
-    const { name, email, password,address } = req.body;
+    const { name, email, password, address } = req.body;
     try {
       const hash = await bcrypt.hash(password, 10);
-      console.log('do the do',name, email, password,address )
       const newUser = await this.model.create({
         name,
         email,
         password: hash,
-        address:address,
+        address: address,
       });
       if (!newUser) {
-        console.log('not new user')
+        console.log("not new user");
         res.send("Something went wrong when creating a new user");
       } else {
-        console.log('done the do')
+        console.log("done the do");
         const payload = {
           _id: newUser._id,
           name: newUser.name,
@@ -149,18 +149,6 @@ class UserController extends BaseController {
       this.errorHandler(err, res);
     }
   }
-
-  // get user by email
-
-  // add friend
-
-  // accept friend request
-
-  // request payment
-
-  // approve payment
-
-  // Part 2: join new group
 }
 
 module.exports = UserController;
