@@ -4,7 +4,6 @@ const userRouter = express.Router();
 module.exports = (controller, verifyToken) => {
   userRouter.get(
     "/getallusersdata",
-    verifyToken(),
     controller.getAllUsersData.bind(controller)
   );
   userRouter.post(
