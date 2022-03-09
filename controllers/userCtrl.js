@@ -23,7 +23,6 @@ class UserController extends BaseController {
   async getUserProfileById(req, res) {
     try {
       const { id } = req.body;
-      console.log("ID: ", id);
       const userProfile = await this.model
         .findOne({ _id: id })
         .populate("friends");
